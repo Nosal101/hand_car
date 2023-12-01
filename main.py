@@ -4,6 +4,10 @@ from pygame.locals import *
 import hand
 import threading
 import queue
+<<<<<<< HEAD
+=======
+import pygame_gui
+>>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
 
 pygame.init()
 
@@ -31,6 +35,27 @@ def game_loop():
     player_x = 250
     player_y = 400
 
+<<<<<<< HEAD
+=======
+    #place where car starts
+    lanes = [150, 250, 350, 450]
+
+    #start game
+    start = 0
+    game_over = 0
+
+    # Menedżer GUI
+    gui_manager = pygame_gui.UIManager((width, height))
+
+    # Przycisk resetowania gry
+    reset_button = pygame_gui.elements.UIButton(
+        relative_rect=pygame.Rect((width - 150) // 2, (height - 50) // 2, 150, 50),
+        text="Reset",
+        manager=gui_manager
+    )
+
+
+>>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
     # every class
     class Vehicle(pygame.sprite.Sprite):
 
@@ -59,15 +84,27 @@ def game_loop():
 
     while running:
         clock.tick(fps)
+<<<<<<< HEAD
         for event in pygame.event.get():
             if (event.type == QUIT or event.type == ord('q')):
                 running = 0
+=======
+        time_delta = clock.tick(fps) / 1000.0
+        for event in pygame.event.get():
+            if (event.type == QUIT or event.type == ord('q')):
+                running = 0
+            gui_manager.process_events(event)
+>>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
 
         #przekazanie wartości z wątku hand_loop
         while not hand_queue.empty():
             value = hand_queue.get()
             #sterownie pojazdem
             player.rect.x = 100 + value*1/2
+<<<<<<< HEAD
+=======
+            start = 1
+>>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
 
         # draw the grass
         screen.fill(green)
@@ -81,9 +118,107 @@ def game_loop():
         pygame.draw.rect(screen, white, pygame.Rect(500 - 5, 0, 5, height))
         for i in range(1, 14, 2):
             pygame.draw.rect(screen, gray, pygame.Rect(150, 40 * i, width - 300, 30))
+<<<<<<< HEAD
         # drow the car
         player_group.draw(screen)
 
+=======
+
+
+        # drow the other car
+        if len(vehicle_group) < 4:
+
+            # ensure there's enough gap between vehicles
+            add_vehicle = True
+            for vehicle in vehicle_group:
+                if vehicle.rect.top < vehicle.rect.height * 1.5:
+                    add_vehicle = False
+
+            if add_vehicle:
+                lane = random.choice(lanes)
+                image = pygame.image.load('C:/Users/nosal/PycharmProjects/car_hand_game/taxi.png')
+                vehicle = Vehicle(image, lane, 40)
+                vehicle_group.add(vehicle)
+
+        # move a vehicle
+        if start==1 and game_over == 0:
+            for vehicle in vehicle_group:
+                vehicle.rect.y += speed
+
+                # Kolizja z pojazdem
+                if player.rect.colliderect(vehicle.rect):
+                    game_over = True
+
+                # remove vehicle once it goes off screen
+                if vehicle.rect.top >= height:
+                    vehicle.kill()
+                    # add to score
+                    score += 1
+                    # speed up the game after passing 5 vehicles
+                    if score > 0 and score % 5 == 0:
+                        speed += 0.5
+
+        # drow the car
+        player_group.draw(screen)
+        vehicle_group.draw(screen)
+
+        # Czcionka tekstu
+        font = pygame.font.Font(None, 36)
+        # Tworzenie napisu
+        text = font.render(f"score:{score}", True, (255, 255, 255))
+        # Pozycja napisu (górny prawy róg)
+        text_rect = text.get_rect(topright=(width - 10, 10))
+
+        # Rysowanie napisu na ekranie
+        screen.blit(text, text_rect)
+
+        #game over
+        if game_over:
+            screen.fill((0, 0, 0))  # Czarne tło
+
+            # Wyświetlenie przycisku resetu
+            gui_manager.update(time_delta)
+            gui_manager.draw_ui(screen)
+
+            # Czcionka tekstu
+            font = pygame.font.Font(None, 36)
+            # Tworzenie napisu
+            text1 = font.render(f"GAME OVER", True, (255, 255, 255))
+            text2 = font.render(f"your score: {score}", True, (255, 255, 255))
+            # Pozycja napisu (górny prawy róg)
+            text_rect1 = text.get_rect(center=(width/2-30, 50))
+            text_rect2 = text.get_rect(center=(width/2-30, 70))
+
+            # Rysowanie napisu na ekranie
+            screen.blit(text1, text_rect1)
+            screen.blit(text2, text_rect2)
+
+            # Sprawdzenie kliknięcia przycisku resetu
+            if reset_button.check_pressed():
+                game_over = False
+                # Przywróć stan gry do początkowego
+                player.rect.x = player_x
+                player.rect.y = player_y
+                vehicle_group.empty()
+                score = 0
+                speed = 2
+
+
+
+
+
+        # Aktualizacja wyświetlania GUI
+        gui_manager.update(time_delta)
+        gui_manager.draw_ui(screen)
+
+        # Wyświetlanie przycisku resetu tylko po przegranej
+        if game_over:
+            reset_button.show()
+        else:
+            reset_button.hide()
+
+        pygame.display.flip()
+>>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
         # screen update
         pygame.display.update()
 def hand_loop():
