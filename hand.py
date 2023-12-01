@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import time
 
+
 def control():
     cap = cv2.VideoCapture(0)
 

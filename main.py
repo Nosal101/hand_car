@@ -4,10 +4,7 @@ from pygame.locals import *
 import hand
 import threading
 import queue
-<<<<<<< HEAD
-=======
 import pygame_gui
->>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
 
 pygame.init()
 
@@ -35,8 +32,6 @@ def game_loop():
     player_x = 250
     player_y = 400
 
-<<<<<<< HEAD
-=======
     #place where car starts
     lanes = [150, 250, 350, 450]
 
@@ -55,7 +50,7 @@ def game_loop():
     )
 
 
->>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
+
     # every class
     class Vehicle(pygame.sprite.Sprite):
 
@@ -84,27 +79,26 @@ def game_loop():
 
     while running:
         clock.tick(fps)
-<<<<<<< HEAD
+
         for event in pygame.event.get():
             if (event.type == QUIT or event.type == ord('q')):
                 running = 0
-=======
+
         time_delta = clock.tick(fps) / 1000.0
         for event in pygame.event.get():
             if (event.type == QUIT or event.type == ord('q')):
                 running = 0
             gui_manager.process_events(event)
->>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
+
 
         #przekazanie wartości z wątku hand_loop
         while not hand_queue.empty():
             value = hand_queue.get()
             #sterownie pojazdem
             player.rect.x = 100 + value*1/2
-<<<<<<< HEAD
-=======
+
             start = 1
->>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
+
 
         # draw the grass
         screen.fill(green)
@@ -118,11 +112,11 @@ def game_loop():
         pygame.draw.rect(screen, white, pygame.Rect(500 - 5, 0, 5, height))
         for i in range(1, 14, 2):
             pygame.draw.rect(screen, gray, pygame.Rect(150, 40 * i, width - 300, 30))
-<<<<<<< HEAD
+
         # drow the car
         player_group.draw(screen)
 
-=======
+
 
 
         # drow the other car
@@ -218,7 +212,7 @@ def game_loop():
             reset_button.hide()
 
         pygame.display.flip()
->>>>>>> 6510b5cb30e27e065e4e026554b88bb4f0f0dd16
+
         # screen update
         pygame.display.update()
 def hand_loop():
